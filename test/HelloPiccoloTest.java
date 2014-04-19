@@ -24,7 +24,7 @@ import org.piccolo2d.nodes.PText;
  *
  * @author bnjmnbrmn
  */
-public class PiccoloTest {
+public class HelloPiccoloTest {
 
 	public static class HelloWorld extends PFrame {
 
@@ -35,7 +35,7 @@ public class PiccoloTest {
 		}
 	}
 
-	public PiccoloTest() {
+	public HelloPiccoloTest() {
 	}
 
 	@BeforeClass
