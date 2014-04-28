@@ -9,6 +9,6 @@ import javax.swing.Action;
  * 
  * @author bnjmnbrmn
  */
-public interface ActionKey extends CardKey {
+public interface ActionKey extends NonHoleKey {
 	public Action[] getActions();
 }

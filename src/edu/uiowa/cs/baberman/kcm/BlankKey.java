@@ -4,6 +4,6 @@ package edu.uiowa.cs.baberman.kcm;
  *
  * @author bnjmnbrmn
  */
-public interface BlankKey extends CardKey {
+public interface BlankKey extends NonHoleKey {
 	
 }

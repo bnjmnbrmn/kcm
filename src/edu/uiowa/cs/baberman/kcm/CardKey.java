@@ -10,11 +10,11 @@ import javax.swing.KeyStroke;
  * @author bnjmnbrmn
  */
 public interface CardKey {
-	
-	/**
-	 * 
-	 * 
-	 * @return the virtual key code, as defined in {@link javax.swing.KeyStroke}. 
-	 */
-	public int getVKCode();
+//	
+//	/**
+//	 * 
+//	 * 
+//	 * @return the virtual key code, as defined in {@link java.awt.event.KeyEvent}. 
+//	 */
+//	public int getVKCode(); //TO DO--IS THIS NECESSARY?
 }
