@@ -30,7 +30,9 @@ public class KCMTest {
 				
 				jframe.add(kcms);
 				
-				jframe.setSize(1000, 1000);
+				//jframe.setSize(1000, 1000);
+				
+				jframe.pack();
 				
 				jframe.setVisible(true);
 			}

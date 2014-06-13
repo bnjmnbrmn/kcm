@@ -5,12 +5,18 @@ import java.util.List;
 import org.piccolo2d.PCanvas;
 import edu.uiowa.cs.baberman.kcm.KeyboardCardMenuSystem;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 /**
  *
  * @author bnjmnbrmn
  */
 public class BasicKCMS extends KeyboardCardMenuSystem {
+	
+	public static final double CARD_STACK_X_OFFSET = 10;
+	public static final double CARD_STACK_Y_OFFSET = 10;
+	
+	public static final double BORDER_WIDTH = 10;
 	
 	private PCanvas canvas;
 	
@@ -30,7 +36,16 @@ public class BasicKCMS extends KeyboardCardMenuSystem {
 		
 		canvas.getLayer().addChild(rootCard.getNode());
 		
+		//TO DO:  SET SIZE/PREFERED SIZE OF CANVAS
+		
 		add(canvas, BorderLayout.CENTER);
+		
+		setPreferredSize(
+				new Dimension( (int)(rootCard.getWidth() + 2*CARD_STACK_X_OFFSET + BORDER_WIDTH), 
+				(int) (rootCard.getHeight() + 2*CARD_STACK_Y_OFFSET + BORDER_WIDTH) )
+				);
+		
+		
 		
 	}
 	
