@@ -10,5 +10,7 @@ import javax.swing.Action;
  * @author bnjmnbrmn
  */
 public interface ActionKey extends NonHoleKey {
-	public Action[] getActions();
+    
+	public Action[] getPreDisplayActions();
+        public Action[] getPostDisplayActions();
 }

@@ -1,34 +1,20 @@
 package edu.uiowa.cs.baberman.kcm.basic;
 
 import edu.uiowa.cs.baberman.kcm.SubmenuKey;
+import java.awt.Color;
 import javax.swing.Action;
 
 /**
+ * 
+ * 
  *
  * @author bnjmnbrmn
  */
-public class BasicSubmenuKey extends BasicCardKey implements SubmenuKey {
+public class BasicSubmenuKey extends BasicActionKey implements SubmenuKey {
 
-	public BasicSubmenuKey(BasicKC card) {
-		super(card);
-	}
-
-	@Override
-	public Action[] getActions() {
-		//TODO
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public Action[] getPreSubmenuDisplayActions() {
-		//TODO
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public Action[] getPostSubmenuDisplayActions() {
-		//TODO
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
+    public BasicSubmenuKey(Color outerColor, Color innerColor,
+            String positionLabelText, String itemLabelText) {
+        super(outerColor, innerColor, positionLabelText, itemLabelText);
+    }
 
 }

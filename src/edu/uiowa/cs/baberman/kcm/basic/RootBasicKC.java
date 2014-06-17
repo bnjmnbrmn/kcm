@@ -9,8 +9,8 @@ import org.piccolo2d.PNode;
  */
 public class RootBasicKC extends BasicKC {
 	public RootBasicKC() {
-		for (BasicKC.KeyCode keyCode : KeyCode.values() ) {
-			setKeyInDefaultPosition(keyCode,new BasicBlankKey(this));
+		for (BasicKC.KeyPosition keyPosition : KeyPosition.values() ) {
+			setKey(keyPosition,new BasicBlankKey(getBackgroundColor(), getKeyColor()));
 		}
 	}
 }

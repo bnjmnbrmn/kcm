@@ -36,8 +36,6 @@ public class BasicKCMS extends KeyboardCardMenuSystem {
 		
 		canvas.getLayer().addChild(rootCard.getNode());
 		
-		//TO DO:  SET SIZE/PREFERED SIZE OF CANVAS
-		
 		add(canvas, BorderLayout.CENTER);
 		
 		setPreferredSize(
@@ -45,6 +43,8 @@ public class BasicKCMS extends KeyboardCardMenuSystem {
 				(int) (rootCard.getHeight() + 2*CARD_STACK_Y_OFFSET + BORDER_WIDTH) )
 				);
 		
+                canvas.setZoomEventHandler(null);
+                canvas.setPanEventHandler(null);
 		
 		
 	}
