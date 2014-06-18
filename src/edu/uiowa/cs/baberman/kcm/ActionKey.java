@@ -1,5 +1,6 @@
 package edu.uiowa.cs.baberman.kcm;
 
+import java.util.List;
 import javax.swing.Action;
 
 /**
@@ -11,6 +12,6 @@ import javax.swing.Action;
  */
 public interface ActionKey extends NonHoleKey {
     
-	public Action[] getPreDisplayActions();
-        public Action[] getPostDisplayActions();
+	public List<Action> getPreDisplayActions();
+        public List<Action> getPostDisplayActions();
 }

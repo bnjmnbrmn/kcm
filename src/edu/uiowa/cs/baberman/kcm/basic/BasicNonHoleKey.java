@@ -68,6 +68,7 @@ public abstract class BasicNonHoleKey extends BasicCardKey implements NonHoleKey
     @Override
     void setOuterPaint(Paint paint) {
         outerSquare.setPaint(paint);
+        outerSquare.setStrokePaint(paint);
     }
     
     void setInnerPaint(Paint paint) {

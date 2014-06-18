@@ -11,6 +11,7 @@ import edu.uiowa.cs.baberman.kcm.BlankKey;
 import edu.uiowa.cs.baberman.kcm.CardKey;
 import edu.uiowa.cs.baberman.kcm.HoleKey;
 import edu.uiowa.cs.baberman.kcm.LeafKey;
+import edu.uiowa.cs.baberman.kcm.NonHoleKey;
 import edu.uiowa.cs.baberman.kcm.SubmenuKey;
 import java.awt.Color;
 import java.awt.Point;
@@ -177,10 +178,13 @@ public class BasicKC implements KeyboardCard {
             node.removeChild(keyPositionsToCardKeys.get(keyPosition).getNode());
         }
         keyPositionsToCardKeys.put(keyPosition, cardKey);
-        PNode cardKeyNode = cardKey.getNode();
-        node.addChild(cardKeyNode);
+        node.addChild(cardKey.getNode());
         Point2D.Double point = KeyPosition.defaultKeyPositionsOffsets.get(keyPosition);
-        cardKeyNode.translate(point.x, point.y);
+        cardKey.getNode().translate(point.x, point.y);
+        cardKey.setOuterPaint(getBackgroundColor());
+        if (cardKey instanceof BasicNonHoleKey) {
+            ((BasicNonHoleKey) cardKey).setInnerPaint(keyColor);
+        }
     }
     
 

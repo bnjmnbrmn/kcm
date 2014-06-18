@@ -14,6 +14,10 @@ public class BasicLeafKey extends BasicActionKey implements LeafKey {
             String positionLabelText, String itemLabelText) {
         super(outerColor, innerColor, positionLabelText, itemLabelText);
     }
+    
+    public BasicLeafKey(String positionLabelText, String itemLabelText) {
+        super(positionLabelText, itemLabelText);
+    }
 
 
 }
