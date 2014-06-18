@@ -170,9 +170,6 @@ public class BasicKC implements KeyboardCard {
         return cardKeysCollection.toArray(new CardKey[numberOfCardKeys]);
     }
 
-//	public void setKeyInDefaultPosition(int vkCode, BasicCardKey cardKey) {
-////		vkCodeToCardKey.put(vkCode, cardKey);
-//	}
     public void setKey(KeyPosition keyPosition, BasicCardKey cardKey) {
         if (keyPositionsToCardKeys.get(keyPosition) != null) {
             node.removeChild(keyPositionsToCardKeys.get(keyPosition).getNode());
@@ -187,6 +184,17 @@ public class BasicKC implements KeyboardCard {
         }
     }
     
+    public BasicLeafKey putNewLeaf(KeyPosition keyPosition) {
+        BasicLeafKey lk = new BasicLeafKey(backgroundColor, keyColor, keyPosition.getKeyLabel(), "");
+        if (keyPositionsToCardKeys.get(keyPosition) != null) {
+            node.removeChild(keyPositionsToCardKeys.get(keyPosition).getNode());
+        }
+        keyPositionsToCardKeys.put(keyPosition, lk);
+        node.addChild(lk.getNode());
+        Point2D.Double point = KeyPosition.defaultKeyPositionsOffsets.get(keyPosition);
+        lk.getNode().translate(point.x, point.y);
+        return lk;
+    }
 
     double getWidth() {
         return 10 * BasicCardKey.OUTER_WIDTH + DEFAULT_ROW_TWO_OFFSET + DEFAULT_ROW_THREE_OFFSET;

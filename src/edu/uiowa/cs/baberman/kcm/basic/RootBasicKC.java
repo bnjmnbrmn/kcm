@@ -13,4 +13,5 @@ public class RootBasicKC extends BasicKC {
 			setKey(keyPosition,new BasicBlankKey(getBackgroundColor(), getKeyColor()));
 		}
 	}
+
 }

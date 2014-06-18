@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Paint;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,6 @@ import org.piccolo2d.util.PBounds;
  */
 public abstract class BasicActionKey extends BasicNonHoleKey implements ActionKey {
 
-
     private PText positionLabel; //typically a single, large charater
     private PText itemLabel; //i.e. menu item label (like "File" or "Open")
 
@@ -35,9 +35,21 @@ public abstract class BasicActionKey extends BasicNonHoleKey implements ActionKe
         adjustPositionLabel(positionLabel);
         getNode().addChild(positionLabel);
 
-        itemLabel = new PText(itemLabelText);
+        setMenuItemText(itemLabelText);
+//        itemLabel = new PText(itemLabelText);
+//        adjustItemLabel(itemLabel);
+//        getNode().addChild(itemLabel);
+    }
+
+    @Override
+    public BasicActionKey setMenuItemText(String itemText) {
+        if (positionLabel != null) {
+            getNode().removeChild(itemLabel);
+        }
+        itemLabel = new PText(itemText);
         adjustItemLabel(itemLabel);
         getNode().addChild(itemLabel);
+        return this;
     }
 
     private void adjustPositionLabel(PText positionLabel) {
@@ -61,10 +73,10 @@ public abstract class BasicActionKey extends BasicNonHoleKey implements ActionKe
                 .deriveFont((float) 14.0));
 
         itemLabel.setConstrainWidthToTextWidth(false);
-        
+
         itemLabel.setWidth(INNER_WIDTH);
         itemLabel.setHeight(INNER_HEIGHT);
-        
+
         itemLabel.setOffset(OUTER_WIDTH / 2 - itemLabel.getWidth() / 2,
                 OUTER_HEIGHT / 2 - itemLabel.getHeight() / 2);
 
@@ -75,14 +87,30 @@ public abstract class BasicActionKey extends BasicNonHoleKey implements ActionKe
                 positionLabelText, itemLabelText);
     }
 
+    private List<Action> preDisplayActions = new ArrayList<Action>();
+
     @Override
     public List<Action> getPreDisplayActions() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    private List<Action> actions = new ArrayList<Action>();
+
     @Override
-    public List<Action> getPostDisplayActions() {
+    public List<Action> getActions() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public BasicActionKey addAction(Action action) {
+        actions.add(action);
+        return this;
+    }
+
+    @Override
+    public BasicActionKey addPreDisplayAction(Action action) {
+        preDisplayActions.add(action);
+        return this;
     }
 
 }

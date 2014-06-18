@@ -12,9 +12,22 @@ import javax.swing.Action;
  */
 public class BasicSubmenuKey extends BasicActionKey implements SubmenuKey {
 
+    private BasicKC submenu;
+
+    public BasicKC getSubmenu() {
+        return submenu;
+    }
+
+    public void setSubmenu(BasicKC submenu) {
+        this.submenu = submenu;
+    }
+    
     public BasicSubmenuKey(Color outerColor, Color innerColor,
             String positionLabelText, String itemLabelText) {
         super(outerColor, innerColor, positionLabelText, itemLabelText);
     }
 
+    public BasicSubmenuKey(String positionLabelText, String itemLabelText) {
+        super(positionLabelText, itemLabelText);
+    }
 }

@@ -2,6 +2,7 @@ package edu.uiowa.cs.baberman.kcm.basic;
 
 import edu.uiowa.cs.baberman.kcm.LeafKey;
 import java.awt.Color;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 /**
@@ -19,5 +20,23 @@ public class BasicLeafKey extends BasicActionKey implements LeafKey {
         super(positionLabelText, itemLabelText);
     }
 
+    @Override
+    public BasicLeafKey setMenuItemText(String itemText) {
+        super.setMenuItemText(itemText);
+        return this;
+    }
 
+    @Override
+    public BasicLeafKey addAction(Action action) {
+        super.addAction(action);
+        return this;
+    }
+
+    @Override
+    public BasicLeafKey addPreDisplayAction(Action action) {
+        super.addPreDisplayAction(action);
+        return this;
+    }
+    
+    
 }
