@@ -4,9 +4,19 @@ import edu.uiowa.cs.baberman.kcm.KeyboardCard;
 import edu.uiowa.cs.baberman.kcm.KeyboardCardMenuSystem;
 import edu.uiowa.cs.baberman.kcm.basic.BasicKC.KeyPosition;
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -52,30 +62,106 @@ public class BasicKCMS extends KeyboardCardMenuSystem {
         canvas.setPanEventHandler(null);
 
         setInputAndActionMaps();
+
+        if(System.getProperty("os.name").equals("Linux"));
+            new LinuxKeyRepeatAdjuster().addAutomaticKeyRepeatOnOff();
+
     }
-    
+
+    private class LinuxKeyRepeatAdjuster {
+
+        private Container topLevelAncestor = null;
+
+        private WindowAdapter windowFocusAndClosingListener = new WindowAdapter() {
+
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                turnOffKeyRepeat();
+            }
+
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                turnOnKeyRepeat();
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                turnOnKeyRepeat();
+            }
+
+        };
+
+        public void addAutomaticKeyRepeatOnOff() {
+            BasicKCMS.this.addHierarchyListener(new HierarchyListener() {
+
+                @Override
+                public void hierarchyChanged(HierarchyEvent e) {
+
+                    if (topLevelAncestor != null && topLevelAncestor instanceof Window) {
+                        System.out.println("old topLevelAncestor instanceof Window");
+                        ((Window) topLevelAncestor).removeWindowFocusListener(windowFocusAndClosingListener);
+                        ((Window) topLevelAncestor).removeWindowListener(windowFocusAndClosingListener);
+                    }
+                    //TO DO:  take care of case where topLevelAncestor is an Applet
+
+                    topLevelAncestor = BasicKCMS.this.getTopLevelAncestor();
+
+                    if (topLevelAncestor != null && topLevelAncestor instanceof Window) {
+                        System.out.println("new topLevelAncestor instanceof Window");
+                        ((Window) topLevelAncestor).addWindowFocusListener(windowFocusAndClosingListener);
+                        ((Window) topLevelAncestor).addWindowListener(windowFocusAndClosingListener);
+                    }
+                    //TO DO:  take care of case where topLevelAncestor is an Applet
+                }
+
+            });
+        }
+
+        private void turnOffKeyRepeat() {
+            try {
+                System.out.println("Turning off KeyRepeat");
+                Runtime.getRuntime().exec("xset -r");
+            } catch (IOException ex) {
+                Logger.getLogger(BasicKCMS.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+
+        private void turnOnKeyRepeat() {
+         
+            try {
+                System.out.println("Turning on KeyRepeat");
+                Runtime.getRuntime().exec("xset r");
+            } catch (IOException ex) {
+                Logger.getLogger(BasicKCMS.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+
+    }
+
     private void setInputAndActionMaps() {
         InputMap im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = getActionMap();
-        
+
         for (KeyPosition kp : BasicKC.KeyPosition.values()) {
-            im.put(KeyStroke.getKeyStroke(kp.getVK_CODE(), 0, false),kp.getKeyLabel()+"Pressed");
-            
-            am.put(kp.getKeyLabel()+"Pressed", new AbstractAction() {
+            im.put(KeyStroke.getKeyStroke(kp.getVK_CODE(), 0, false), kp.getKeyLabel() + "Pressed");
+
+            am.put(kp.getKeyLabel() + "Pressed", new AbstractAction() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //TO DO
+                    System.out.println("Pressed");
                 }
             });
-            
-            im.put(KeyStroke.getKeyStroke(kp.getVK_CODE(), 0, true), kp.getKeyLabel()+"Released");
-            
-            am.put(kp.getKeyLabel()+"Released", new AbstractAction() {
+
+            im.put(KeyStroke.getKeyStroke(kp.getVK_CODE(), 0, true), kp.getKeyLabel() + "Released");
+
+            am.put(kp.getKeyLabel() + "Released", new AbstractAction() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //TO DO
+                    System.out.println("Released");
                 }
             });
         }
