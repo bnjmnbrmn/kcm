@@ -8,7 +8,7 @@ import org.piccolo2d.nodes.PPath;
  *
  * @author bnjmnbrmn
  */
-public abstract class NonHoleKey extends CardKey {
+abstract class NonHoleKey extends CardKey {
 
     public static final Color DEFAULT_INNER_COLOR = Color.LIGHT_GRAY;
 
@@ -32,11 +32,11 @@ public abstract class NonHoleKey extends CardKey {
         this.innerSquare = innerSquare;
     }
 
-    public NonHoleKey(Color outerColor, Color innerColor) {
+    public NonHoleKey(Paint outerPaint, Paint innerPaint) {
         outerSquare = PPath.createRectangle(
                 0, 0, OUTER_WIDTH, OUTER_HEIGHT);
-        outerSquare.setStrokePaint(outerColor);
-        outerSquare.setPaint(outerColor);
+        outerSquare.setStrokePaint(outerPaint);
+        outerSquare.setPaint(outerPaint);
         getNode().addChild(outerSquare);
 
         innerSquare = PPath.createRectangle(
@@ -44,7 +44,7 @@ public abstract class NonHoleKey extends CardKey {
                 (OUTER_HEIGHT - INNER_HEIGHT) / 2.0,
                 INNER_WIDTH,
                 INNER_HEIGHT);
-        innerSquare.setPaint(innerColor);
+        innerSquare.setPaint(innerPaint);
         getNode().addChild(innerSquare);
     }
 

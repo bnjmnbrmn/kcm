@@ -1,6 +1,5 @@
 package edu.uiowa.cs.baberman.kcm;
 
-import edu.uiowa.cs.baberman.kcm.ThirtyKeyKC.KeyPosition;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -30,7 +29,7 @@ import org.piccolo2d.nodes.PText;
  *
  * @author bnjmnbrmn
  */
-public class KCMS extends JPanel {
+public class KCMS<C extends KeyboardCard> extends JPanel {
 
     public static final double CARD_STACK_X_OFFSET = 10;
     public static final double CARD_STACK_Y_OFFSET = 10;
@@ -38,18 +37,21 @@ public class KCMS extends JPanel {
     public static final double BORDER_WIDTH = 10;
 
     private final PCanvas canvas = new PCanvas();
-    private final List<ThirtyKeyKC> roots = new ArrayList<ThirtyKeyKC>();
+    private final List<C> roots = new ArrayList<C>();
 
     PCanvas getCanvas() {
         return canvas;
     }
 
-    private ThirtyKeyKC currentRoot;
+    private C currentRoot;
     
 
-    public KCMS(ThirtyKeyKC rootCard) {
+    public KCMS(C rootCard) {
         super();
         
+		addRoot(rootCard);
+		setCurrentRoot(rootCard);
+		
         canvas.getLayer().addChild(rootCard.getNode());
         
         add(canvas, BorderLayout.CENTER);
@@ -62,12 +64,16 @@ public class KCMS extends JPanel {
         canvas.setZoomEventHandler(null);
         canvas.setPanEventHandler(null);
 
+		
+		
         setInputAndActionMaps();
 
-        if(System.getProperty("os.name").equals("Linux"));
+        if(System.getProperty("os.name").equals("Linux"))
             new LinuxKeyRepeatAdjuster().addAutomaticKeyRepeatOnOff();
 
     }
+
+	
 
     private class LinuxKeyRepeatAdjuster {
 
@@ -145,31 +151,33 @@ public class KCMS extends JPanel {
         InputMap im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = getActionMap();
         
-        for (final KeyPosition kp : ThirtyKeyKC.KeyPosition.values()) {
-            im.put(KeyStroke.getKeyStroke(kp.getVK_CODE(), 0, false), kp.getKeyLabel() + "Pressed");
+		final C root = getCurrentRoot();
+		
+        for (final Integer kc : root.getKeyCodes()) {
+            im.put(KeyStroke.getKeyStroke(kc, 0, false), root.getKeyLabelForKeyCode(kc) + "Pressed");
 
-            am.put(kp.getKeyLabel() + "Pressed", new AbstractAction() {
+            am.put(root.getKeyLabelForKeyCode(kc) + "Pressed", new AbstractAction() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    
+                    System.out.println(root.getKeyLabelForKeyCode(kc) + "Pressed");
                 }
             });
 
-            im.put(KeyStroke.getKeyStroke(kp.getVK_CODE(), 0, true), kp.getKeyLabel() + "Released");
+            im.put(KeyStroke.getKeyStroke(kc, 0, true), root.getKeyLabelForKeyCode(kc) + "Released");
 
-            am.put(kp.getKeyLabel() + "Released", new AbstractAction() {
+            am.put(root.getKeyLabelForKeyCode(kc) + "Released", new AbstractAction() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println(kp.getKeyLabel() + "Released");
+                    System.out.println(root.getKeyLabelForKeyCode(kc) + "Released");
                 }
             });
         }
     }
 
 
-    public void setCurrentRoot(ThirtyKeyKC root) {
+    public void setCurrentRoot(C root) {
         if (roots.contains(root)) {
             this.currentRoot = root;
         } else {
@@ -178,21 +186,21 @@ public class KCMS extends JPanel {
     }
 
     
-    public ThirtyKeyKC getCurrentRoot() {
+    public C getCurrentRoot() {
         return currentRoot;
     }
 
-    public ThirtyKeyKC[] getRoots() {
-        ThirtyKeyKC[] toReturn = new ThirtyKeyKC[roots.size()];
-        return roots.toArray(toReturn);
+    public List<C> getRoots() {
+        return roots;
     }
 
-    public void addRoot(ThirtyKeyKC root) {
+    public void addRoot(C root) {
         roots.add(root);
     }
 
-    public void removeRoot(ThirtyKeyKC root) {
+    public void removeRoot(C root) {
         roots.remove(root);
     }
 
 }
+

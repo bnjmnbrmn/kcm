@@ -1,8 +1,10 @@
 
 import edu.uiowa.cs.baberman.kcm.KCMS;
-import edu.uiowa.cs.baberman.kcm.ThirtyKeyKC;
+import edu.uiowa.cs.baberman.kcm.KeyboardCard;
+import edu.uiowa.cs.baberman.kcm.ThirtyKey;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -25,12 +27,17 @@ public class KCMTest {
                 JFrame jframe = new JFrame("KCM Test");
                 jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                ThirtyKeyKC root = ThirtyKeyKC.createRootCard();
+                ThirtyKey root 
+						= ThirtyKey.createRootCard();
 
-                root.putNewLeaf(ThirtyKeyKC.KeyPosition.P)
+                root.putNewLeaf(KeyEvent.VK_Q)
                         .setMenuItemText("Test");
 
-                KCMS kcms = new KCMS(root);
+				root.putNewLeaf(ThirtyKey.KeyPosition.P)
+						.setMenuItemText("Test2");
+				
+                KCMS<ThirtyKey> kcms 
+						= new KCMS<ThirtyKey>(root);
 
                 jframe.add(kcms);
 

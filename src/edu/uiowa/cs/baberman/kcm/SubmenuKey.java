@@ -9,15 +9,15 @@ import javax.swing.Action;
  *
  * @author bnjmnbrmn
  */
-public class SubmenuKey extends ActionKey {
+public class SubmenuKey<C extends KeyboardCard> extends ActionKey {
 
-    private ThirtyKeyKC submenu;
+    private C submenu;
 
-    public ThirtyKeyKC getSubmenu() {
+    public C getSubmenu() {
         return submenu;
     }
 
-    public void setSubmenu(ThirtyKeyKC submenu) {
+    public void setSubmenu(C submenu) {
         this.submenu = submenu;
     }
     

@@ -6,7 +6,7 @@ import java.awt.Paint;
  *
  * @author bnjmnbrmn
  */
-public class HoleKey extends CardKey  {
+class HoleKey extends CardKey  {
 
     @Override
     void setOuterPaint(Paint paint) {

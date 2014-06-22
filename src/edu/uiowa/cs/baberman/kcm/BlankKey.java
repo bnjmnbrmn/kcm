@@ -1,15 +1,16 @@
 package edu.uiowa.cs.baberman.kcm;
 
 import java.awt.Color;
+import java.awt.Paint;
 
 /**
  *
  * @author bnjmnbrmn
  */
-public class BlankKey extends NonHoleKey {
+class BlankKey extends NonHoleKey {
 
-	public BlankKey(Color outerColor, Color innerColor) {
-		super(outerColor, innerColor);
+	public BlankKey(Paint outerPaint, Paint innerPaint) {
+		super(outerPaint, innerPaint);
 	}
 
 }

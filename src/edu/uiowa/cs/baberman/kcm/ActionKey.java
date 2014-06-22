@@ -1,6 +1,7 @@
 package edu.uiowa.cs.baberman.kcm;
 
 import java.awt.Color;
+import java.awt.Paint;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Paint;
@@ -16,14 +17,14 @@ import org.piccolo2d.util.PBounds;
  *
  * @author bnjmnbrmn
  */
-public abstract class ActionKey extends NonHoleKey {
+abstract class ActionKey extends NonHoleKey {
 
     private PText positionLabel; //typically a single, large charater
     private PText itemLabel; //i.e. menu item label (like "File" or "Open")
 
-    public ActionKey(Color outerColor, Color innerColor,
+    public ActionKey(Paint outerPaint, Paint innerPaint,
             String positionLabelText, String itemLabelText) {
-        super(outerColor, innerColor);
+        super(outerPaint, innerPaint);
 
         positionLabel = new PText(positionLabelText);
         adjustPositionLabel(positionLabel);

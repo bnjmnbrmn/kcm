@@ -2,6 +2,7 @@ package edu.uiowa.cs.baberman.kcm;
 
 
 import java.awt.Color;
+import java.awt.Paint;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
@@ -11,9 +12,9 @@ import javax.swing.Action;
  */
 public class LeafKey extends ActionKey {
 
-    public LeafKey(Color outerColor, Color innerColor,
+    public LeafKey(Paint outerPaint, Paint innerPaint,
             String positionLabelText, String itemLabelText) {
-        super(outerColor, innerColor, positionLabelText, itemLabelText);
+        super(outerPaint, innerPaint, positionLabelText, itemLabelText);
     }
     
     public LeafKey(String positionLabelText, String itemLabelText) {
