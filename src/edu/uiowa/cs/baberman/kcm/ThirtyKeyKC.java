@@ -1,18 +1,11 @@
-package edu.uiowa.cs.baberman.kcm.basic;
+package edu.uiowa.cs.baberman.kcm;
 
-import edu.uiowa.cs.baberman.kcm.KeyboardCard;
 import static java.awt.event.KeyEvent.*;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Action;
 import org.piccolo2d.PNode;
-import edu.uiowa.cs.baberman.kcm.BlankKey;
-import edu.uiowa.cs.baberman.kcm.CardKey;
-import edu.uiowa.cs.baberman.kcm.HoleKey;
-import edu.uiowa.cs.baberman.kcm.LeafKey;
-import edu.uiowa.cs.baberman.kcm.NonHoleKey;
-import edu.uiowa.cs.baberman.kcm.SubmenuKey;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -23,7 +16,7 @@ import org.piccolo2d.nodes.PPath;
  *
  * @author bnjmnbrmn
  */
-public class BasicKC implements KeyboardCard {
+public class ThirtyKeyKC {
 
     public Color getBackgroundColor() {
         return backgroundColor;
@@ -33,7 +26,7 @@ public class BasicKC implements KeyboardCard {
         return keyColor;
     }
     
-    public Map<KeyPosition, BasicCardKey> getKeyPositionsToCardKeys() {
+    public Map<KeyPosition, CardKey> getKeyPositionsToCardKeys() {
         return keyPositionsToCardKeys;
     }
 
@@ -72,67 +65,67 @@ public class BasicKC implements KeyboardCard {
                     double x = 0;
                     double y = 0;
                     put(KeyPosition.Q, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.W, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.E, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.R, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.T, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.Y, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.U, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.I, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.O, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.P, new Point2D.Double(x, y));
 
                     x = DEFAULT_ROW_TWO_OFFSET;
-                    y += BasicCardKey.OUTER_HEIGHT;
+                    y += CardKey.OUTER_HEIGHT;
                     put(KeyPosition.A, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.S, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.D, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.F, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.G, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.H, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.J, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.K, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.L, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.SEMICOLON, new Point2D.Double(x, y));
 
                     x = DEFAULT_ROW_THREE_OFFSET;
-                    y += BasicCardKey.OUTER_HEIGHT;
+                    y += CardKey.OUTER_HEIGHT;
                     put(KeyPosition.Z, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.X, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.C, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.V, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.B, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.N, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.M, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.COMMA, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.PERIOD, new Point2D.Double(x, y));
-                    x += BasicCardKey.OUTER_WIDTH;
+                    x += CardKey.OUTER_WIDTH;
                     put(KeyPosition.SLASH, new Point2D.Double(x, y));
 
                 }
@@ -151,7 +144,7 @@ public class BasicKC implements KeyboardCard {
         return node;
     }
 
-    BasicKC() {
+    private ThirtyKeyKC() {
         node = new PNode();
         backgroundColor = DEFAULT_LEVEL_0_BACKGROUND_COLOR;
         keyColor = DEFAULT_LEVEL_0_KEY_COLOR;
@@ -160,47 +153,53 @@ public class BasicKC implements KeyboardCard {
     private Color backgroundColor;
     private Color keyColor;
 
-    private Map<KeyPosition, BasicCardKey> keyPositionsToCardKeys
-            = new EnumMap<KeyPosition, BasicCardKey>(KeyPosition.class);
+    private Map<KeyPosition, CardKey> keyPositionsToCardKeys
+            = new EnumMap<KeyPosition, CardKey>(KeyPosition.class);
 
-    @Override
     public CardKey[] getKeys() {
-        Collection<BasicCardKey> cardKeysCollection = keyPositionsToCardKeys.values();
+        Collection<CardKey> cardKeysCollection = keyPositionsToCardKeys.values();
         int numberOfCardKeys = cardKeysCollection.size();
         return cardKeysCollection.toArray(new CardKey[numberOfCardKeys]);
     }
 
-    public void setKey(KeyPosition keyPosition, BasicCardKey cardKey) {
+    private void putKey(CardKey key, KeyPosition keyPosition) {
         if (keyPositionsToCardKeys.get(keyPosition) != null) {
             node.removeChild(keyPositionsToCardKeys.get(keyPosition).getNode());
         }
-        keyPositionsToCardKeys.put(keyPosition, cardKey);
-        node.addChild(cardKey.getNode());
+        keyPositionsToCardKeys.put(keyPosition, key);
+        node.addChild(key.getNode());
         Point2D.Double point = KeyPosition.defaultKeyPositionsOffsets.get(keyPosition);
-        cardKey.getNode().translate(point.x, point.y);
-        cardKey.setOuterPaint(getBackgroundColor());
-        if (cardKey instanceof BasicNonHoleKey) {
-            ((BasicNonHoleKey) cardKey).setInnerPaint(keyColor);
-        }
+        key.getNode().translate(point.x, point.y);
     }
     
-    public BasicLeafKey putNewLeaf(KeyPosition keyPosition) {
-        BasicLeafKey lk = new BasicLeafKey(backgroundColor, keyColor, keyPosition.getKeyLabel(), "");
-        if (keyPositionsToCardKeys.get(keyPosition) != null) {
-            node.removeChild(keyPositionsToCardKeys.get(keyPosition).getNode());
-        }
-        keyPositionsToCardKeys.put(keyPosition, lk);
-        node.addChild(lk.getNode());
-        Point2D.Double point = KeyPosition.defaultKeyPositionsOffsets.get(keyPosition);
-        lk.getNode().translate(point.x, point.y);
+    public LeafKey putNewLeaf(KeyPosition keyPosition) {
+        LeafKey lk = new LeafKey(backgroundColor, keyColor, keyPosition.getKeyLabel(), "");
+        putKey(lk, keyPosition);
         return lk;
+    }
+    
+    public BlankKey putNewBlankKey(KeyPosition keyPosition) {
+        BlankKey bk = new BlankKey(backgroundColor, keyColor);
+        putKey(bk, keyPosition);
+        return bk;
+    }
+    
+    public static ThirtyKeyKC createRootCard() {
+        ThirtyKeyKC newRootCard = new ThirtyKeyKC();
+        
+        for (KeyPosition kp : KeyPosition.values())
+            newRootCard.putNewBlankKey(kp);
+        
+        newRootCard.getNode().addChild(new BlankKey(newRootCard.getBackgroundColor(), newRootCard.getKeyColor()).getNode());
+        
+        return newRootCard;
     }
 
     double getWidth() {
-        return 10 * BasicCardKey.OUTER_WIDTH + DEFAULT_ROW_TWO_OFFSET + DEFAULT_ROW_THREE_OFFSET;
+        return 10 * CardKey.OUTER_WIDTH + DEFAULT_ROW_TWO_OFFSET + DEFAULT_ROW_THREE_OFFSET;
     }
 
     double getHeight() {
-        return 3 * BasicCardKey.OUTER_HEIGHT;
+        return 3 * CardKey.OUTER_HEIGHT;
     }
 }

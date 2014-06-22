@@ -1,8 +1,6 @@
-package edu.uiowa.cs.baberman.kcm.basic;
+package edu.uiowa.cs.baberman.kcm;
 
-import edu.uiowa.cs.baberman.kcm.KeyboardCard;
-import edu.uiowa.cs.baberman.kcm.KeyboardCardMenuSystem;
-import edu.uiowa.cs.baberman.kcm.basic.BasicKC.KeyPosition;
+import edu.uiowa.cs.baberman.kcm.ThirtyKeyKC.KeyPosition;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -14,6 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,39 +20,41 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import org.piccolo2d.PCanvas;
+import org.piccolo2d.nodes.PText;
 
 /**
  *
  * @author bnjmnbrmn
  */
-public class BasicKCMS extends KeyboardCardMenuSystem {
+public class KCMS extends JPanel {
 
     public static final double CARD_STACK_X_OFFSET = 10;
     public static final double CARD_STACK_Y_OFFSET = 10;
 
     public static final double BORDER_WIDTH = 10;
 
-    private PCanvas canvas;
+    private final PCanvas canvas = new PCanvas();
+    private final List<ThirtyKeyKC> roots = new ArrayList<ThirtyKeyKC>();
 
     PCanvas getCanvas() {
         return canvas;
     }
 
-    private KeyboardCard currentRoot;
-    private List<KeyboardCard> roots;
+    private ThirtyKeyKC currentRoot;
+    
 
-    public BasicKCMS(RootBasicKC rootCard) {
+    public KCMS(ThirtyKeyKC rootCard) {
         super();
-
-        canvas = new PCanvas();
-
+        
         canvas.getLayer().addChild(rootCard.getNode());
-
+        
         add(canvas, BorderLayout.CENTER);
-
-        setPreferredSize(
+        
+        canvas.setPreferredSize(
                 new Dimension((int) (rootCard.getWidth() + 2 * CARD_STACK_X_OFFSET + BORDER_WIDTH),
                         (int) (rootCard.getHeight() + 2 * CARD_STACK_Y_OFFSET + BORDER_WIDTH))
         );
@@ -92,7 +93,7 @@ public class BasicKCMS extends KeyboardCardMenuSystem {
         };
 
         public void addAutomaticKeyRepeatOnOff() {
-            BasicKCMS.this.addHierarchyListener(new HierarchyListener() {
+            KCMS.this.addHierarchyListener(new HierarchyListener() {
 
                 @Override
                 public void hierarchyChanged(HierarchyEvent e) {
@@ -104,7 +105,7 @@ public class BasicKCMS extends KeyboardCardMenuSystem {
                     }
                     //TO DO:  take care of case where topLevelAncestor is an Applet
 
-                    topLevelAncestor = BasicKCMS.this.getTopLevelAncestor();
+                    topLevelAncestor = KCMS.this.getTopLevelAncestor();
 
                     if (topLevelAncestor != null && topLevelAncestor instanceof Window) {
                         System.out.println("new topLevelAncestor instanceof Window");
@@ -122,7 +123,7 @@ public class BasicKCMS extends KeyboardCardMenuSystem {
                 System.out.println("Turning off KeyRepeat");
                 Runtime.getRuntime().exec("xset -r");
             } catch (IOException ex) {
-                Logger.getLogger(BasicKCMS.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(KCMS.class.getName()).log(Level.SEVERE, null, ex);
             }
             
         }
@@ -133,7 +134,7 @@ public class BasicKCMS extends KeyboardCardMenuSystem {
                 System.out.println("Turning on KeyRepeat");
                 Runtime.getRuntime().exec("xset r");
             } catch (IOException ex) {
-                Logger.getLogger(BasicKCMS.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(KCMS.class.getName()).log(Level.SEVERE, null, ex);
             }
             
         }
@@ -143,15 +144,15 @@ public class BasicKCMS extends KeyboardCardMenuSystem {
     private void setInputAndActionMaps() {
         InputMap im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = getActionMap();
-
-        for (KeyPosition kp : BasicKC.KeyPosition.values()) {
+        
+        for (final KeyPosition kp : ThirtyKeyKC.KeyPosition.values()) {
             im.put(KeyStroke.getKeyStroke(kp.getVK_CODE(), 0, false), kp.getKeyLabel() + "Pressed");
 
             am.put(kp.getKeyLabel() + "Pressed", new AbstractAction() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Pressed");
+                    
                 }
             });
 
@@ -161,37 +162,36 @@ public class BasicKCMS extends KeyboardCardMenuSystem {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Released");
+                    System.out.println(kp.getKeyLabel() + "Released");
                 }
             });
         }
     }
 
-    @Override
-    public void setCurrentRoot(KeyboardCard root) {
+
+    public void setCurrentRoot(ThirtyKeyKC root) {
         if (roots.contains(root)) {
             this.currentRoot = root;
+        } else {
+            throw new RuntimeException("Tried to set the current root to one that had not been added");
         }
     }
 
-    @Override
-    public KeyboardCard getCurrentRoot() {
+    
+    public ThirtyKeyKC getCurrentRoot() {
         return currentRoot;
     }
 
-    @Override
-    public KeyboardCard[] getRoots() {
-        KeyboardCard[] toReturn = new KeyboardCard[roots.size()];
+    public ThirtyKeyKC[] getRoots() {
+        ThirtyKeyKC[] toReturn = new ThirtyKeyKC[roots.size()];
         return roots.toArray(toReturn);
     }
 
-    @Override
-    public void addRoot(KeyboardCard root) {
+    public void addRoot(ThirtyKeyKC root) {
         roots.add(root);
     }
 
-    @Override
-    public void removeRoot(KeyboardCard root) {
+    public void removeRoot(ThirtyKeyKC root) {
         roots.remove(root);
     }
 
