@@ -29,7 +29,7 @@ import org.piccolo2d.nodes.PText;
  *
  * @author bnjmnbrmn
  */
-public class KCMS<C extends KeyboardCard> extends JPanel {
+public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 
     public static final double CARD_STACK_X_OFFSET = 10;
     public static final double CARD_STACK_Y_OFFSET = 10;
@@ -38,12 +38,12 @@ public class KCMS<C extends KeyboardCard> extends JPanel {
 
     private final PCanvas canvas = new PCanvas();
     private final List<C> roots = new ArrayList<C>();
+	private C currentRoot;
 
     PCanvas getCanvas() {
         return canvas;
     }
 
-    private C currentRoot;
     
 
     public KCMS(C rootCard) {
@@ -151,7 +151,7 @@ public class KCMS<C extends KeyboardCard> extends JPanel {
         InputMap im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = getActionMap();
         
-		final C root = getCurrentRoot();
+		final KeyboardCard<C> root = getCurrentRoot();
 		
         for (final Integer kc : root.getKeyCodes()) {
             im.put(KeyStroke.getKeyStroke(kc, 0, false), root.getKeyLabelForKeyCode(kc) + "Pressed");
@@ -186,7 +186,7 @@ public class KCMS<C extends KeyboardCard> extends JPanel {
     }
 
     
-    public C getCurrentRoot() {
+    public KeyboardCard<C> getCurrentRoot() {
         return currentRoot;
     }
 

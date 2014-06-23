@@ -32,7 +32,7 @@ abstract class NonHoleKey extends CardKey {
         this.innerSquare = innerSquare;
     }
 
-    public NonHoleKey(Paint outerPaint, Paint innerPaint) {
+    NonHoleKey(Paint outerPaint, Paint innerPaint) {
         outerSquare = PPath.createRectangle(
                 0, 0, OUTER_WIDTH, OUTER_HEIGHT);
         outerSquare.setStrokePaint(outerPaint);

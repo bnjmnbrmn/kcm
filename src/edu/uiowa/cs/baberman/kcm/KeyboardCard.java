@@ -14,7 +14,7 @@ import static java.awt.event.KeyEvent.*;
  *
  * @author bnjmnbrmn
  */
-public abstract class KeyboardCard {
+public abstract class KeyboardCard<C extends KeyboardCard<C>>{
 	
 	static final Color DEFAULT_ROOT_OUTER_KEY_PAINT = new Color(68,41,242);;
 	static final Color DEFAULT_ROOT_INNER_KEY_PAINT = new Color(155,142,237);;
@@ -30,6 +30,9 @@ public abstract class KeyboardCard {
 	final PNode getNode() {
 		return node;
 	}
+	
+	private final Map<Integer,CardKey> cardKeysForKeyCodes 
+		= new HashMap<Integer, CardKey>();
 	
 	private final Paint innerKeyPaint;
 	public Paint getInnerKeyPaint() {
@@ -71,7 +74,7 @@ public abstract class KeyboardCard {
 		return lk;
 	}
 	
-	public BlankKey putNewBlankKey(Integer keyCode) {
+	BlankKey putNewBlankKey(Integer keyCode) {
 		if (!getKeyCodes().contains(keyCode))
 			throw new RuntimeException("Bad key code argument");
 		
@@ -82,6 +85,48 @@ public abstract class KeyboardCard {
 		return bk;
 	}
 
-	private final Map<Integer,CardKey> cardKeysForKeyCodes 
-			= new HashMap<Integer, CardKey>();
+	public SubmenuKey<C> putNewSubmenu(Integer keyCode) {
+		if (!getKeyCodes().contains(keyCode))
+			throw new RuntimeException("Bad key code argument");
+		
+		SubmenuKey<C> sk = new SubmenuKey<C>(getOuterKeyPaint(), 
+				getInnerKeyPaint(), getKeyLabelForKeyCode(keyCode), 
+				"", this, keyCode);
+		
+		putKey(keyCode, sk);
+		
+		return sk;
+	}
+	
+	private final List<Integer> holeKeyCodes = new ArrayList<Integer>();
+	
+	public KeyboardCard<C> createSubmenu(Integer keyCode) {
+		KeyboardCard<C> newSubmenu = this.getNewRootCard();
+		
+		for (Integer kc : holeKeyCodes) {
+			newSubmenu.holeKeyCodes.add(kc);
+		}
+		newSubmenu.holeKeyCodes.add(keyCode);
+		
+		for (Integer holeKeyCode : newSubmenu.holeKeyCodes) {
+			newSubmenu.putNewHoleKey(holeKeyCode);
+		}
+		
+		return newSubmenu;
+				
+	}
+
+	abstract KeyboardCard<C> getNewRootCard();
+
+	HoleKey putNewHoleKey(Integer keyCode) {
+		if (!getKeyCodes().contains(keyCode))
+			throw new RuntimeException("Bad key code argument");
+		
+		HoleKey hk = new HoleKey(getOuterKeyPaint());
+		
+		putKey(keyCode, hk);
+		
+		return hk;
+	}
+	
 }

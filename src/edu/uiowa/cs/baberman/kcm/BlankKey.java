@@ -7,9 +7,9 @@ import java.awt.Paint;
  *
  * @author bnjmnbrmn
  */
-class BlankKey extends NonHoleKey {
+public class BlankKey extends NonHoleKey {
 
-	public BlankKey(Paint outerPaint, Paint innerPaint) {
+	BlankKey(Paint outerPaint, Paint innerPaint) {
 		super(outerPaint, innerPaint);
 	}
 

@@ -12,12 +12,12 @@ import javax.swing.Action;
  */
 public class LeafKey extends ActionKey {
 
-    public LeafKey(Paint outerPaint, Paint innerPaint,
+    LeafKey(Paint outerPaint, Paint innerPaint,
             String positionLabelText, String itemLabelText) {
         super(outerPaint, innerPaint, positionLabelText, itemLabelText);
     }
     
-    public LeafKey(String positionLabelText, String itemLabelText) {
+    LeafKey(String positionLabelText, String itemLabelText) {
         super(positionLabelText, itemLabelText);
     }
 

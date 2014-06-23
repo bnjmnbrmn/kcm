@@ -22,7 +22,7 @@ abstract class ActionKey extends NonHoleKey {
     private PText positionLabel; //typically a single, large charater
     private PText itemLabel; //i.e. menu item label (like "File" or "Open")
 
-    public ActionKey(Paint outerPaint, Paint innerPaint,
+    ActionKey(Paint outerPaint, Paint innerPaint,
             String positionLabelText, String itemLabelText) {
         super(outerPaint, innerPaint);
 

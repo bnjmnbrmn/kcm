@@ -39,6 +39,9 @@ public class KCMTest {
                 KCMS<ThirtyKey> kcms 
 						= new KCMS<ThirtyKey>(root);
 
+				root.putNewSubmenu(KeyEvent.VK_A)
+						.setMenuItemText("Submenu test");
+				
                 jframe.add(kcms);
 
                 jframe.pack();
