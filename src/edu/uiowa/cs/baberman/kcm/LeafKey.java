@@ -3,6 +3,7 @@ package edu.uiowa.cs.baberman.kcm;
 
 import java.awt.Color;
 import java.awt.Paint;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
@@ -26,18 +27,29 @@ public class LeafKey extends ActionKey {
         super.setMenuItemText(itemText);
         return this;
     }
-
+    
     @Override
-    public LeafKey addAction(Action action) {
-        super.addAction(action);
-        return this;
-    }
-
-    @Override
-    public LeafKey addPreDisplayAction(Action action) {
-        super.addPreDisplayAction(action);
+    public LeafKey addPreDisplayPressAction(Action action) {
+        super.addPreDisplayPressAction(action);
         return this;
     }
     
+    @Override
+    public LeafKey addPressAction(Action action) {
+        super.addPressAction(action);
+        return this;
+    }
+
+    @Override
+    public LeafKey addPreDisplayReleaseAction(Action action) {
+        super.addPreDisplayReleaseAction(action);
+        return this;
+    }
+
+    @Override
+    public LeafKey addReleaseAction(Action action) {
+        super.addReleaseAction(action);
+        return this;
+    }
     
 }

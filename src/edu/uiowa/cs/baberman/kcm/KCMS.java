@@ -63,9 +63,7 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 
         canvas.setZoomEventHandler(null);
         canvas.setPanEventHandler(null);
-
-		
-		
+	
         setInputAndActionMaps();
 
         if(System.getProperty("os.name").equals("Linux"))

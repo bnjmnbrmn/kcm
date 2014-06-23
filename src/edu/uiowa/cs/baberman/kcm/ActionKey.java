@@ -36,7 +36,6 @@ abstract class ActionKey extends NonHoleKey {
 //        getNode().addChild(itemLabel);
     }
 
-    
     public ActionKey setMenuItemText(String itemText) {
         if (positionLabel != null) {
             getNode().removeChild(itemLabel);
@@ -82,25 +81,49 @@ abstract class ActionKey extends NonHoleKey {
                 positionLabelText, itemLabelText);
     }
 
-    private List<Action> preDisplayActions = new ArrayList<Action>();
+    private final List<Action> preDisplayPressActions = new ArrayList<Action>();
 
-    public List<Action> getPreDisplayActions() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Action> getPreDisplayPressActions() {
+        return preDisplayPressActions;
     }
 
-    private List<Action> actions = new ArrayList<Action>();
-
-    public List<Action> getActions() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public ActionKey addAction(Action action) {
-        actions.add(action);
+    public ActionKey addPreDisplayPressAction(Action action) {
+        preDisplayPressActions.add(action);
         return this;
     }
 
-    public ActionKey addPreDisplayAction(Action action) {
-        preDisplayActions.add(action);
+    private final List<Action> pressActions = new ArrayList<Action>();
+
+    public List<Action> getPressActions() {
+        return pressActions;
+    }
+
+    public ActionKey addPressAction(Action action) {
+        pressActions.add(action);
+        return this;
+    }
+
+    private final List<Action> preDisplayReleaseActions
+            = new ArrayList<Action>();
+
+    public List<Action> getPreDisplayReleaseActions() {
+        return preDisplayReleaseActions;
+    }
+
+    public ActionKey addPreDisplayReleaseAction(Action action) {
+        preDisplayReleaseActions.add(action);
+        return this;
+    }
+
+    private final List<Action> releaseActions
+            = new ArrayList<Action>();
+
+    public List<Action> getReleaseActions() {
+        return releaseActions;
+    }
+
+    public ActionKey addReleaseAction(Action action) {
+        releaseActions.add(action);
         return this;
     }
 

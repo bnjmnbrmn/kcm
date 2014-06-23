@@ -27,21 +27,21 @@ public class KCMTest {
                 JFrame jframe = new JFrame("KCM Test");
                 jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                ThirtyKey root 
-						= ThirtyKey.createRootCard();
+                ThirtyKey root
+                        = ThirtyKey.createRootCard();
 
                 root.putNewLeaf(KeyEvent.VK_Q)
                         .setMenuItemText("Test");
 
-				root.putNewLeaf(ThirtyKey.KeyPosition.P)
-						.setMenuItemText("Test2");
-				
-                KCMS<ThirtyKey> kcms 
-						= new KCMS<ThirtyKey>(root);
+                root.putNewLeaf(ThirtyKey.KeyPosition.P)
+                        .setMenuItemText("Test2");
 
-				root.putNewSubmenu(KeyEvent.VK_A)
-						.setMenuItemText("Submenu test");
-				
+                KCMS<ThirtyKey> kcms
+                        = new KCMS<ThirtyKey>(root);
+
+                root.putNewSubmenu(KeyEvent.VK_A)
+                        .setMenuItemText("Submenu test");
+
                 jframe.add(kcms);
 
                 jframe.pack();

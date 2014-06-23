@@ -100,18 +100,22 @@ public abstract class KeyboardCard<C extends KeyboardCard<C>>{
 	
 	private final List<Integer> holeKeyCodes = new ArrayList<Integer>();
 	
-	public KeyboardCard<C> createSubmenu(Integer keyCode) {
+	public KeyboardCard<C> createSubmenu(Integer newHoleKeyCode) {
 		KeyboardCard<C> newSubmenu = this.getNewRootCard();
 		
 		for (Integer kc : holeKeyCodes) {
 			newSubmenu.holeKeyCodes.add(kc);
 		}
-		newSubmenu.holeKeyCodes.add(keyCode);
+		newSubmenu.holeKeyCodes.add(newHoleKeyCode);
 		
-		for (Integer holeKeyCode : newSubmenu.holeKeyCodes) {
-			newSubmenu.putNewHoleKey(holeKeyCode);
-		}
-		
+                for (Integer kc : getKeyCodes()) {
+                    if (newSubmenu.holeKeyCodes.contains(kc)) {
+                        newSubmenu.putNewHoleKey(kc);
+                    } else {
+                        newSubmenu.putNewBlankKey(kc);
+                    }
+                }
+                
 		return newSubmenu;
 				
 	}
