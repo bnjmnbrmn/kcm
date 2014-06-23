@@ -11,8 +11,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -38,24 +44,22 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 
     private final PCanvas canvas = new PCanvas();
     private final List<C> roots = new ArrayList<C>();
-	private C currentRoot;
+    private C currentRoot;
 
     PCanvas getCanvas() {
         return canvas;
     }
 
-    
-
     public KCMS(C rootCard) {
         super();
-        
-		addRoot(rootCard);
-		setCurrentRoot(rootCard);
-		
-        canvas.getLayer().addChild(rootCard.getNode());
-        
+
+        addRoot(rootCard);
+        setCurrentRoot(rootCard);
+
+        //canvas.getLayer().addChild(rootCard.getNode());
+
         add(canvas, BorderLayout.CENTER);
-        
+
         canvas.setPreferredSize(
                 new Dimension((int) (rootCard.getWidth() + 2 * CARD_STACK_X_OFFSET + BORDER_WIDTH),
                         (int) (rootCard.getHeight() + 2 * CARD_STACK_Y_OFFSET + BORDER_WIDTH))
@@ -63,15 +67,14 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 
         canvas.setZoomEventHandler(null);
         canvas.setPanEventHandler(null);
-	
+
         setInputAndActionMaps();
 
-        if(System.getProperty("os.name").equals("Linux"))
+        if (System.getProperty("os.name").equals("Linux")) {
             new LinuxKeyRepeatAdjuster().addAutomaticKeyRepeatOnOff();
+        }
 
     }
-
-	
 
     private class LinuxKeyRepeatAdjuster {
 
@@ -129,18 +132,18 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
             } catch (IOException ex) {
                 Logger.getLogger(KCMS.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
 
         private void turnOnKeyRepeat() {
-         
+
             try {
                 System.out.println("Turning on KeyRepeat");
                 Runtime.getRuntime().exec("xset r");
             } catch (IOException ex) {
                 Logger.getLogger(KCMS.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
 
     }
@@ -148,9 +151,9 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
     private void setInputAndActionMaps() {
         InputMap im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = getActionMap();
-        
-		final KeyboardCard<C> root = getCurrentRoot();
-		
+
+        final KeyboardCard<C> root = getCurrentRoot();
+
         for (final Integer kc : root.getKeyCodes()) {
             im.put(KeyStroke.getKeyStroke(kc, 0, false), root.getKeyLabelForKeyCode(kc) + "Pressed");
 
@@ -158,7 +161,10 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println(root.getKeyLabelForKeyCode(kc) + "Pressed");
+                    C top = cardStack.peek();
+                    
+                    top.getCardKeyForKeyCode(kc);
+                    
                 }
             });
 
@@ -174,7 +180,9 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
         }
     }
 
-
+    private final Deque<C> cardStack = new ArrayDeque<C>();
+    private final Deque<Integer> keyCodeStack = new ArrayDeque<Integer>();
+    
     public void setCurrentRoot(C root) {
         if (roots.contains(root)) {
             this.currentRoot = root;
@@ -183,7 +191,6 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
         }
     }
 
-    
     public KeyboardCard<C> getCurrentRoot() {
         return currentRoot;
     }
@@ -201,4 +208,3 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
     }
 
 }
-
