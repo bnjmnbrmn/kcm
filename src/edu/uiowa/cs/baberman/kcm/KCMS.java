@@ -270,9 +270,9 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 	private void pushCard(C card) {
 		canvas.getLayer().addChild(card.getNode());
 
-		card.getNode().translate(cardStack.size() * CARD_STACK_X_OFFSET,
+		card.getNode().setOffset(cardStack.size() * CARD_STACK_X_OFFSET, 
 				cardStack.size() * CARD_STACK_Y_OFFSET);
-
+		
 		cardStack.add(card);
 	}
 

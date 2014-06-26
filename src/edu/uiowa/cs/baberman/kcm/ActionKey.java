@@ -152,12 +152,12 @@ abstract class ActionKey extends NonHoleKey {
 	private boolean isActive = true;
 	
 	void setActive() {
-		itemLabel.setTextPaint(Color.GRAY);	
+		itemLabel.setTextPaint(Color.BLACK);	
 		isActive = true;
 	}
 	
 	void setInactive() {
-		itemLabel.setTextPaint(Color.BLACK);
+		itemLabel.setTextPaint(Color.GRAY);
 		isActive = false;
 	}
 	
