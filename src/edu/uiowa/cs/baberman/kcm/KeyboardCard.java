@@ -16,9 +16,26 @@ import static java.awt.event.KeyEvent.*;
  */
 public abstract class KeyboardCard<C extends KeyboardCard<C>> {
 
-    static final Color DEFAULT_ROOT_OUTER_KEY_PAINT = new Color(68, 41, 242);
-    
-    static final Color DEFAULT_ROOT_INNER_KEY_PAINT = new Color(155, 142, 237);
+	static List<Color> defaultOuterKeyColors = new ArrayList<Color>() {
+		{
+			add(new Color(68, 41, 242));
+			add(new Color(232, 123, 123));
+			add(new Color(0, 166, 22));
+		}
+	};
+	static List<Color> defaultInnerKeyColors = new ArrayList<Color>() {
+		{
+			add(new Color(155, 142, 237));
+			add(new Color(232, 123, 123));
+			add(new Color(72, 240, 94));
+		}	
+	};
+	
+//    static final Color DEFAULT_ROOT_OUTER_KEY_PAINT = new Color(68, 41, 242);
+//    static final Color DEFAULT_ROOT_INNER_KEY_PAINT = new Color(155, 142, 237);
+//	
+//	static final Color DEFAULT_LEVEL_ONE_OUTER_KEY_PAINT = new Color(242, 56,56);
+//	static final Color DEFAULT_LEVEL_ONE_INNER_KEY_PAINT = new Color(232, 123,123);
 
     abstract double getWidth();
 
@@ -128,10 +145,13 @@ public abstract class KeyboardCard<C extends KeyboardCard<C>> {
 	}
 	
     C createSubmenu(Integer newCardInvokingKeyCode) {
-        C newSubmenu = this.getNewRootCard();
-                //this.getNewSubmenuCard(newCardInvokingKeyCode);
-        
-
+		int newSubmenuLevel = this.getHoleKeyCodes().size() + 1;
+        C newSubmenu = this.getNewRootCard(
+				defaultInnerKeyColors
+				.get(newSubmenuLevel % defaultInnerKeyColors.size()), 
+				defaultOuterKeyColors
+				.get(newSubmenuLevel % defaultOuterKeyColors.size()));
+                
         for (Integer kc : holeKeyCodes) {
             newSubmenu.getHoleKeyCodes().add(kc);
         }
@@ -149,8 +169,9 @@ public abstract class KeyboardCard<C extends KeyboardCard<C>> {
 
     }
 
-//    abstract KeyboardCard<C> getNewSubmenuCard(Integer invokingKeyCode);
     abstract C getNewRootCard();
+	
+	abstract C getNewRootCard(Paint innerKeyPaint, Paint outerKeyPaint);
 
     HoleKey putNewHoleKey(Integer keyCode) {
         if (!getKeyCodes().contains(keyCode)) {
@@ -177,6 +198,15 @@ public abstract class KeyboardCard<C extends KeyboardCard<C>> {
 			if (ck instanceof ActionKey)
 				((ActionKey) ck).setActive();
 		}
+	}
+	
+	boolean allActive() {
+		for (CardKey ck : cardKeysForKeyCodes.values()) {
+			if (ck instanceof ActionKey)
+				if ( !((ActionKey) ck).isActive() )
+					return false;
+		}
+		return true;
 	}
 	
 	SubmenuKey<C> getPressedSubmenuKey() {

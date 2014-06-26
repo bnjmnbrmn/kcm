@@ -191,23 +191,33 @@ public final class ThirtyKey extends KeyboardCard<ThirtyKey> {
     }
 
     public static ThirtyKey createRootCard() {
-        ThirtyKey newRoot = new ThirtyKey(DEFAULT_ROOT_INNER_KEY_PAINT,
-                DEFAULT_ROOT_OUTER_KEY_PAINT);
+        ThirtyKey newRoot = new ThirtyKey(defaultInnerKeyColors.get(0),
+                defaultOuterKeyColors.get(0));
         for (Integer keyCode : keyCodes) {
             newRoot.putNewBlankKey(keyCode);
         }
         return newRoot;
     }
-
-//    @Override
-//    KeyboardCard<ThirtyKey> getNewSubmenuCard(Integer invokingKeyCode) {
-//        ThirtyKey newSubmenu = new 
-//    }
+	
+	public static ThirtyKey createRootCard(Paint innerKeyPaint, Paint outerKeyPaint) {
+		ThirtyKey newRoot = new ThirtyKey(innerKeyPaint, outerKeyPaint);
+		for (Integer keyCode : keyCodes) {
+			newRoot.putNewBlankKey(keyCode);
+		}
+		return newRoot;
+	}
     
     @Override
     ThirtyKey getNewRootCard() {
         return createRootCard();
     }
+
+	@Override
+	ThirtyKey getNewRootCard(Paint innerKeyPaint, Paint outerKeyPaint) {
+		return createRootCard(innerKeyPaint, outerKeyPaint);
+	}
+	
+	
 
     @Override
     double getWidth() {

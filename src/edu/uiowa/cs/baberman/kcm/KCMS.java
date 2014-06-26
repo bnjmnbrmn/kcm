@@ -40,8 +40,8 @@ import org.piccolo2d.nodes.PText;
  */
 public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 
-	public static final double CARD_STACK_X_OFFSET = 10;
-	public static final double CARD_STACK_Y_OFFSET = 10;
+	public static final double CARD_STACK_X_OFFSET = 5;
+	public static final double CARD_STACK_Y_OFFSET = 5;
 	public static final double BORDER_WIDTH = 10;
 	private final PCanvas canvas = new PCanvas();
 	private final List<C> roots = new ArrayList<C>();
@@ -228,7 +228,8 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 						popCards(e);
 
 					} else if (cardKey instanceof HoleKey) {
-						popCards(e);
+						if (top.allActive())
+							popCards(e);
 					}
 //
 //					if (cardKey instanceof HoleKey) {

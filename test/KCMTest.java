@@ -1,6 +1,7 @@
 
 import edu.uiowa.cs.baberman.kcm.KCMS;
 import edu.uiowa.cs.baberman.kcm.KeyboardCard;
+import edu.uiowa.cs.baberman.kcm.SubmenuKey;
 import edu.uiowa.cs.baberman.kcm.ThirtyKey;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -39,8 +40,14 @@ public class KCMTest {
                 KCMS<ThirtyKey> kcms
                         = new KCMS<ThirtyKey>(root);
 
-                root.putNewSubmenu(KeyEvent.VK_A)
+                SubmenuKey<ThirtyKey> rootKeyA = root.putNewSubmenu(KeyEvent.VK_A)
                         .setMenuItemText("Submenu test");
+				
+				rootKeyA.getSubmenu().putNewLeaf(ThirtyKey.KeyPosition.S)
+						.setMenuItemText("Submenu leaf");
+				
+				rootKeyA.getSubmenu().putNewSubmenu(KeyEvent.VK_J)
+						.setMenuItemText("submenu submenu");
 
                 jframe.add(kcms);
 
