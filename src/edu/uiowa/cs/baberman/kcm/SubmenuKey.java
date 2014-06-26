@@ -12,9 +12,9 @@ import javax.swing.Action;
  */
 public class SubmenuKey<C extends KeyboardCard<C>> extends ActionKey {
 
-    private final KeyboardCard<C> submenu;
+    private final C submenu;
 
-    public KeyboardCard<C> getSubmenu() {
+    public C getSubmenu() {
         return submenu;
     }
 

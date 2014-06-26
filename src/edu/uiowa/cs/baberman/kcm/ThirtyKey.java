@@ -192,7 +192,7 @@ public final class ThirtyKey extends KeyboardCard<ThirtyKey> {
 
     public static ThirtyKey createRootCard() {
         ThirtyKey newRoot = new ThirtyKey(DEFAULT_ROOT_INNER_KEY_PAINT,
-                DEFAULT_ROOT_OUTER_KEY_PAINT, null);
+                DEFAULT_ROOT_OUTER_KEY_PAINT);
         for (Integer keyCode : keyCodes) {
             newRoot.putNewBlankKey(keyCode);
         }

@@ -29,8 +29,6 @@ public abstract class KeyboardCard<C extends KeyboardCard<C>> {
     public abstract String getKeyLabelForKeyCode(Integer keyCode);
 
     public abstract Point2D.Double getKeyPositionForKeyCode(Integer keyCode);
-    
-    abstract CardKey getCardKeyForKeyCode(Integer keyCode);
 
     private final PNode node = new PNode();
 
@@ -40,6 +38,17 @@ public abstract class KeyboardCard<C extends KeyboardCard<C>> {
 
     private final Map<Integer, CardKey> cardKeysForKeyCodes
             = new HashMap<Integer, CardKey>();
+	
+	private final Map<CardKey, Integer> keyCodesForCardKeys
+			= new HashMap<CardKey, Integer>();
+	
+	CardKey getCardKeyForKeyCode(Integer keyCode) {
+		return cardKeysForKeyCodes.get(keyCode);
+	}
+	
+	Integer getKeyCodeForCardKey(CardKey cardKey) {
+		return keyCodesForCardKeys.get(cardKey);
+	}
 
     private final Paint innerKeyPaint;
 
@@ -67,6 +76,7 @@ public abstract class KeyboardCard<C extends KeyboardCard<C>> {
             node.removeChild(cardKeysForKeyCodes.get(keyCode).getNode());
         }
         cardKeysForKeyCodes.put(keyCode, key);
+		keyCodesForCardKeys.put(key, keyCode);
         node.addChild(key.getNode());
         Point2D.Double point = getKeyPositionForKeyCode(keyCode);
         key.getNode().translate(point.x, point.y);
@@ -113,18 +123,22 @@ public abstract class KeyboardCard<C extends KeyboardCard<C>> {
 
     private final List<Integer> holeKeyCodes = new ArrayList<Integer>();
 
-    KeyboardCard<C> createSubmenu(Integer newCardInvokingKeyCode) {
-        KeyboardCard<C> newSubmenu = this.getNewRootCard();
+	public final List<Integer> getHoleKeyCodes() {
+		return holeKeyCodes;
+	}
+	
+    C createSubmenu(Integer newCardInvokingKeyCode) {
+        C newSubmenu = this.getNewRootCard();
                 //this.getNewSubmenuCard(newCardInvokingKeyCode);
         
 
         for (Integer kc : holeKeyCodes) {
-            newSubmenu.holeKeyCodes.add(kc);
+            newSubmenu.getHoleKeyCodes().add(kc);
         }
-        newSubmenu.holeKeyCodes.add(newCardInvokingKeyCode);
+        newSubmenu.getHoleKeyCodes().add(newCardInvokingKeyCode);
 
         for (Integer kc : getKeyCodes()) {
-            if (newSubmenu.holeKeyCodes.contains(kc)) {
+            if (newSubmenu.getHoleKeyCodes().contains(kc)) {
                 newSubmenu.putNewHoleKey(kc);
             } else {
                 newSubmenu.putNewBlankKey(kc);
@@ -136,7 +150,7 @@ public abstract class KeyboardCard<C extends KeyboardCard<C>> {
     }
 
 //    abstract KeyboardCard<C> getNewSubmenuCard(Integer invokingKeyCode);
-    abstract KeyboardCard<C> getNewRootCard();
+    abstract C getNewRootCard();
 
     HoleKey putNewHoleKey(Integer keyCode) {
         if (!getKeyCodes().contains(keyCode)) {
@@ -149,5 +163,35 @@ public abstract class KeyboardCard<C extends KeyboardCard<C>> {
 
         return hk;
     }
+	
+	void setAllInactiveExcept(ActionKey ak) {
+		for (CardKey ck : cardKeysForKeyCodes.values()) {
+			if (ck instanceof ActionKey)
+				((ActionKey) ck).setInactive();
+		}
+		ak.setActive();
+	}
+	
+	void setAllActive() {
+		for (CardKey ck : cardKeysForKeyCodes.values()) {
+			if (ck instanceof ActionKey)
+				((ActionKey) ck).setActive();
+		}
+	}
+	
+	SubmenuKey<C> getPressedSubmenuKey() {
+		for (Integer keyCode : getKeyCodes()) {
+			CardKey potentialSubmenuKey = getCardKeyForKeyCode(keyCode);
+			if (potentialSubmenuKey instanceof SubmenuKey) {
+				SubmenuKey<C> potentiallyPressedSK = (SubmenuKey<C>) potentialSubmenuKey;
+				
+				if (potentiallyPressedSK.isPressed()) {
+					return potentiallyPressedSK;
+				}
+			}
+		}
+		
+		return null;
+	}
 
 }

@@ -1,10 +1,12 @@
 package edu.uiowa.cs.baberman.kcm;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Paint;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Paint;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +93,11 @@ abstract class ActionKey extends NonHoleKey {
         preDisplayPressActions.add(action);
         return this;
     }
+	
+	public void performPreDisplayPressActions(ActionEvent e) {
+		for (Action action : preDisplayPressActions) 
+			action.actionPerformed(e);
+	}
 
     private final List<Action> pressActions = new ArrayList<Action>();
 
@@ -102,6 +109,11 @@ abstract class ActionKey extends NonHoleKey {
         pressActions.add(action);
         return this;
     }
+	
+	public void performPressActions(ActionEvent e) {
+		for (Action action : pressActions)
+			action.actionPerformed(e);
+	}
 
     private final List<Action> preDisplayReleaseActions
             = new ArrayList<Action>();
@@ -115,6 +127,11 @@ abstract class ActionKey extends NonHoleKey {
         return this;
     }
 
+	public void performPreDisplayReleaseActions(ActionEvent e) {
+		for (Action action : preDisplayReleaseActions)
+			action.actionPerformed(e);
+	}
+	
     private final List<Action> releaseActions
             = new ArrayList<Action>();
 
@@ -126,5 +143,41 @@ abstract class ActionKey extends NonHoleKey {
         releaseActions.add(action);
         return this;
     }
+	
+	public void performReleaseActions(ActionEvent e) {
+		for (Action action : releaseActions) 
+			action.actionPerformed(e);
+	}
 
+	private boolean isActive = true;
+	
+	void setActive() {
+		itemLabel.setTextPaint(Color.GRAY);	
+		isActive = true;
+	}
+	
+	void setInactive() {
+		itemLabel.setTextPaint(Color.BLACK);
+		isActive = false;
+	}
+	
+	boolean isActive() {
+		return isActive;
+	}
+	
+	private boolean isPressed = false;
+	
+	void setPressed() {
+		getInnerSquare().setStroke(new BasicStroke(3.0f));
+		isPressed = true;
+	}
+	
+	void setReleased() {
+		getInnerSquare().setStroke(new BasicStroke(1.0f));
+		isPressed = true;
+	}
+	
+	boolean isPressed() {
+		return isPressed;
+	}
 }
