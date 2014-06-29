@@ -3,6 +3,7 @@ package edu.uiowa.cs.baberman.kcm;
 import java.awt.Color;
 import java.awt.Paint;
 import javax.swing.Action;
+import org.piccolo2d.nodes.PImage;
 
 /**
  *
@@ -13,6 +14,8 @@ import javax.swing.Action;
 public class SubmenuKey<C extends KeyboardCard<C>> extends ActionKey {
 
     private final C submenu;
+	
+	private final PImage arrow;
 
     public C getSubmenu() {
         return submenu;
@@ -27,6 +30,14 @@ public class SubmenuKey<C extends KeyboardCard<C>> extends ActionKey {
         }
 
         submenu = card.createSubmenu(keyCode);
+		
+		arrow = new PImage("submenu_arrow.png");
+		final double scale = .5;
+		arrow.setBounds(
+				OUTER_WIDTH-arrow.getWidth()*scale-((OUTER_WIDTH-INNER_WIDTH)/2)-1,
+				OUTER_HEIGHT-arrow.getHeight()*scale-((OUTER_HEIGHT-INNER_HEIGHT)/2)-1, 
+				arrow.getWidth()*scale, arrow.getHeight()*scale);
+		getNode().addChild(arrow);
     }
 
     @Override

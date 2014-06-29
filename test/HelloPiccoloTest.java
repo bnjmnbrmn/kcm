@@ -18,6 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.piccolo2d.extras.PFrame;
+import org.piccolo2d.nodes.PImage;
 import org.piccolo2d.nodes.PText;
 
 /**
@@ -31,6 +32,9 @@ public class HelloPiccoloTest {
 		public HelloWorld() {
 			PText helloWorldText = new PText("Hello world!");
 
+			PImage arrow = new PImage("submenu_arrow.png");
+			
+			getCanvas().getLayer().addChild(arrow);
 			getCanvas().getLayer().addChild(helloWorldText);
 		}
 	}
