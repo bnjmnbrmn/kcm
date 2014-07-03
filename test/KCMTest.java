@@ -5,7 +5,9 @@ import edu.uiowa.cs.baberman.kcm.SubmenuKey;
 import edu.uiowa.cs.baberman.kcm.ThirtyKey;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -32,7 +34,14 @@ public class KCMTest {
                         = ThirtyKey.createRootCard();
 
                 root.putNewLeaf(KeyEvent.VK_Q)
-                        .setMenuItemText("Test");
+                        .setMenuItemText("Test")
+                        .addPressAction(new AbstractAction() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Q pressed");
+                    }
+                });
 
                 root.putNewLeaf(ThirtyKey.KeyPosition.P)
                         .setMenuItemText("Test2");
