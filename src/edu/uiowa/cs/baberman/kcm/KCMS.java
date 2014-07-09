@@ -6,6 +6,12 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.event.WindowAdapter;
@@ -40,147 +46,161 @@ import org.piccolo2d.nodes.PText;
  */
 public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 
-	public static final double CARD_STACK_X_OFFSET = 5;
-	public static final double CARD_STACK_Y_OFFSET = 5;
-	public static final double BORDER_WIDTH = 10;
-	private final PCanvas canvas = new PCanvas();
-	private final List<C> roots = new ArrayList<C>();
-	private C currentRoot;
+    public static final double CARD_STACK_X_OFFSET = 5;
+    public static final double CARD_STACK_Y_OFFSET = 5;
+    public static final double BORDER_WIDTH = 10;
+    private final PCanvas canvas = new PCanvas();
+    private final List<C> roots = new ArrayList<C>();
+    private C currentRoot;
 
-	PCanvas getCanvas() {
-		return canvas;
-	}
+    PCanvas getCanvas() {
+        return canvas;
+    }
 
-	public KCMS(C rootCard) {
-		super();
+    public KCMS(C rootCard) {
+        super();
 
-		addRoot(rootCard);
-		setCurrentRoot(rootCard);
+        addRoot(rootCard);
+        setCurrentRoot(rootCard);
 
 		//canvas.getLayer().addChild(rootCard.getNode());
+        add(canvas, BorderLayout.CENTER);
 
-		add(canvas, BorderLayout.CENTER);
+        canvas.setPreferredSize(
+                new Dimension((int) (rootCard.getWidth() + 2 * CARD_STACK_X_OFFSET + BORDER_WIDTH),
+                        (int) (rootCard.getHeight() + 2 * CARD_STACK_Y_OFFSET + BORDER_WIDTH)));
 
-		canvas.setPreferredSize(
-				new Dimension((int) (rootCard.getWidth() + 2 * CARD_STACK_X_OFFSET + BORDER_WIDTH),
-				(int) (rootCard.getHeight() + 2 * CARD_STACK_Y_OFFSET + BORDER_WIDTH)));
+        canvas.setZoomEventHandler(null);
+        canvas.setPanEventHandler(null);
 
-		canvas.setZoomEventHandler(null);
-		canvas.setPanEventHandler(null);
+        setInputAndActionMaps();
 
-		setInputAndActionMaps();
+        if (System.getProperty("os.name").equals("Linux")) {
+            new LinuxKeyRepeatAdjuster().addAutomaticKeyRepeatOnOff();
+        }
 
-		if (System.getProperty("os.name").equals("Linux")) {
-			new LinuxKeyRepeatAdjuster().addAutomaticKeyRepeatOnOff();
-		}
+    }
 
-	}
+    private class LinuxKeyRepeatAdjuster {
 
-	private class LinuxKeyRepeatAdjuster {
+        private Container topLevelAncestor = null;
+        private WindowAdapter windowFocusAndClosingListener = new WindowAdapter() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                //turnOffKeyRepeat();
+            }
 
-		private Container topLevelAncestor = null;
-		private WindowAdapter windowFocusAndClosingListener = new WindowAdapter() {
-			@Override
-			public void windowGainedFocus(WindowEvent e) {
-				turnOffKeyRepeat();
-			}
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                turnOnKeyRepeat();
+            }
 
-			@Override
-			public void windowLostFocus(WindowEvent e) {
-				turnOnKeyRepeat();
-			}
+            @Override
+            public void windowClosing(WindowEvent e) {
+                turnOnKeyRepeat();
+            }
 
-			@Override
-			public void windowClosing(WindowEvent e) {
-				turnOnKeyRepeat();
-			}
-		};
+        };
 
-		public void addAutomaticKeyRepeatOnOff() {
-			KCMS.this.addHierarchyListener(new HierarchyListener() {
-				@Override
-				public void hierarchyChanged(HierarchyEvent e) {
+        public void addAutomaticKeyRepeatOnOff() {
+            KCMS.this.addFocusListener(new FocusListener() {
 
-					if (topLevelAncestor != null && topLevelAncestor instanceof Window) {
-						System.out.println("old topLevelAncestor instanceof Window");
-						((Window) topLevelAncestor).removeWindowFocusListener(windowFocusAndClosingListener);
-						((Window) topLevelAncestor).removeWindowListener(windowFocusAndClosingListener);
-					}
-					//TO DO:  take care of case where topLevelAncestor is an Applet
+                @Override
+                public void focusGained(FocusEvent e) {
+                    turnOffKeyRepeat();
+                }
 
-					topLevelAncestor = KCMS.this.getTopLevelAncestor();
-
-					if (topLevelAncestor != null && topLevelAncestor instanceof Window) {
-						System.out.println("new topLevelAncestor instanceof Window");
-						((Window) topLevelAncestor).addWindowFocusListener(windowFocusAndClosingListener);
-						((Window) topLevelAncestor).addWindowListener(windowFocusAndClosingListener);
-					}
-					//TO DO:  take care of case where topLevelAncestor is an Applet
-				}
-			});
-		}
-
-		private void turnOffKeyRepeat() {
-			try {
-				System.out.println("Turning off KeyRepeat");
-				Runtime.getRuntime().exec("xset -r");
-			} catch (IOException ex) {
-				Logger.getLogger(KCMS.class.getName()).log(Level.SEVERE, null, ex);
-			}
-
-		}
-
-		private void turnOnKeyRepeat() {
-
-			try {
-				System.out.println("Turning on KeyRepeat");
-				Runtime.getRuntime().exec("xset r");
-			} catch (IOException ex) {
-				Logger.getLogger(KCMS.class.getName()).log(Level.SEVERE, null, ex);
-			}
-
-		}
-	}
-
-	private void setInputAndActionMaps() {
-		InputMap im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
-		ActionMap am = getActionMap();
-
-		final KeyboardCard<C> root = getCurrentRoot();
-
-		for (final Integer keyCode : root.getKeyCodes()) {
-			im.put(KeyStroke.getKeyStroke(keyCode, 0, false),
-					root.getKeyLabelForKeyCode(keyCode) + "Pressed");
-			am.put(root.getKeyLabelForKeyCode(keyCode) + "Pressed", new AbstractAction() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					codesForHeldDownKeys.add(keyCode);
-
-					C top = cardStack.get(cardStack.size() - 1);
-					CardKey cardKey = top.getCardKeyForKeyCode(keyCode);
-
-					if (cardKey instanceof LeafKey) {
-						LeafKey lk = (LeafKey) cardKey;
-
-						if (lk.isActive()) {
-							lk.performPreDisplayPressActions(e);
-							top.setAllInactiveExcept(lk);
-							lk.setPressed();
-							lk.performPressActions(e);
-						}
-					} else if (cardKey instanceof SubmenuKey) {
-						SubmenuKey<C> sk = (SubmenuKey<C>) cardKey;
-
-						if (sk.isActive()) {
-							sk.performPreDisplayPressActions(e);
-							top.setAllInactiveExcept(sk); //unnecessary
-							sk.setPressed();
-							pushCard(sk.getSubmenu());
-							sk.performPressActions(e);
-						}
-					}
+                @Override
+                public void focusLost(FocusEvent e) {
+                    turnOnKeyRepeat();
+                }
+            });
 
 
+            KCMS.this.addHierarchyListener(new HierarchyListener() {
+                @Override
+                public void hierarchyChanged(HierarchyEvent e) {
+
+                    if (topLevelAncestor != null && topLevelAncestor instanceof Window) {
+                        System.out.println("old topLevelAncestor instanceof Window");
+                        ((Window) topLevelAncestor).removeWindowFocusListener(windowFocusAndClosingListener);
+                        ((Window) topLevelAncestor).removeWindowListener(windowFocusAndClosingListener);
+                    }
+                    //TO DO:  take care of case where topLevelAncestor is an Applet
+
+                    topLevelAncestor = KCMS.this.getTopLevelAncestor();
+
+                    if (topLevelAncestor != null && topLevelAncestor instanceof Window) {
+                        System.out.println("new topLevelAncestor instanceof Window");
+                        ((Window) topLevelAncestor).addWindowFocusListener(windowFocusAndClosingListener);
+                        ((Window) topLevelAncestor).addWindowListener(windowFocusAndClosingListener);
+                    }
+                    //TO DO:  take care of case where topLevelAncestor is an Applet
+                }
+            });
+        }
+
+        private void turnOffKeyRepeat() {
+            try {
+                System.out.println("Turning off KeyRepeat");
+                Runtime.getRuntime().exec("xset -r");
+            } catch (IOException ex) {
+                Logger.getLogger(KCMS.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+        private void turnOnKeyRepeat() {
+
+            try {
+                System.out.println("Turning on KeyRepeat");
+                Runtime.getRuntime().exec("xset r");
+            } catch (IOException ex) {
+                Logger.getLogger(KCMS.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }
+
+    private void setInputAndActionMaps() {
+
+        InputMap im = getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        //InputMap im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = getActionMap();
+
+        final KeyboardCard<C> root = getCurrentRoot();
+
+        for (final Integer keyCode : root.getKeyCodes()) {
+            im.put(KeyStroke.getKeyStroke(keyCode, 0, false),
+                    root.getKeyLabelForKeyCode(keyCode) + "Pressed");
+            am.put(root.getKeyLabelForKeyCode(keyCode) + "Pressed", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    codesForHeldDownKeys.add(keyCode);
+
+                    C top = cardStack.get(cardStack.size() - 1);
+                    CardKey cardKey = top.getCardKeyForKeyCode(keyCode);
+
+                    if (cardKey instanceof LeafKey) {
+                        LeafKey lk = (LeafKey) cardKey;
+
+                        if (lk.isActive()) {
+                            lk.performPreDisplayPressActions(e);
+                            top.setAllInactiveExcept(lk);
+                            lk.setPressed();
+                            lk.performPressActions(e);
+                        }
+                    } else if (cardKey instanceof SubmenuKey) {
+                        SubmenuKey<C> sk = (SubmenuKey<C>) cardKey;
+
+                        if (sk.isActive()) {
+                            sk.performPreDisplayPressActions(e);
+                            top.setAllInactiveExcept(sk); //unnecessary
+                            sk.setPressed();
+                            pushCard(sk.getSubmenu());
+                            sk.performPressActions(e);
+                        }
+                    }
 
 //					if (heldDownLeaf == null) {
 //						if (cardKey instanceof SubmenuKey) {
@@ -204,33 +224,34 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 //							}
 //						}
 //					}
-				}
-			});
+                }
+            });
 
-			im.put(KeyStroke.getKeyStroke(keyCode, 0, true),
-					root.getKeyLabelForKeyCode(keyCode) + "Released");
-			am.put(root.getKeyLabelForKeyCode(keyCode) + "Released", new AbstractAction() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					codesForHeldDownKeys.remove(keyCode);
+            im.put(KeyStroke.getKeyStroke(keyCode, 0, true),
+                    root.getKeyLabelForKeyCode(keyCode) + "Released");
+            am.put(root.getKeyLabelForKeyCode(keyCode) + "Released", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    codesForHeldDownKeys.remove(keyCode);
 
-					C top = cardStack.get(cardStack.size() - 1);
-					CardKey cardKey = top.getCardKeyForKeyCode(keyCode);
+                    C top = cardStack.get(cardStack.size() - 1);
+                    CardKey cardKey = top.getCardKeyForKeyCode(keyCode);
 
-					if (cardKey instanceof LeafKey) {
-						LeafKey lk = (LeafKey) cardKey;
+                    if (cardKey instanceof LeafKey) {
+                        LeafKey lk = (LeafKey) cardKey;
 
-						lk.performPreDisplayReleaseActions(e);
-						top.setAllActive();
-						lk.setReleased();
-						lk.performReleaseActions(e);
+                        lk.performPreDisplayReleaseActions(e);
+                        top.setAllActive();
+                        lk.setReleased();
+                        lk.performReleaseActions(e);
 
-						popCards(e);
+                        popCards(e);
 
-					} else if (cardKey instanceof HoleKey) {
-						if (top.allActive())
-							popCards(e);
-					}
+                    } else if (cardKey instanceof HoleKey) {
+                        if (top.allActive()) {
+                            popCards(e);
+                        }
+                    }
 //
 //					if (cardKey instanceof HoleKey) {
 //
@@ -263,126 +284,126 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 //							action.actionPerformed(e);
 //						}
 //					}
-				}
-			});
-		}
-	}
+                }
+            });
+        }
+    }
 
-	private void pushCard(C card) {
-		canvas.getLayer().addChild(card.getNode());
+    private void pushCard(C card) {
+        canvas.getLayer().addChild(card.getNode());
 
-		card.getNode().setOffset(cardStack.size() * CARD_STACK_X_OFFSET, 
-				cardStack.size() * CARD_STACK_Y_OFFSET);
-		
-		cardStack.add(card);
-	}
+        card.getNode().setOffset(cardStack.size() * CARD_STACK_X_OFFSET,
+                cardStack.size() * CARD_STACK_Y_OFFSET);
 
-	private C popCard() {
-		if (cardStack.isEmpty()) {
-			throw new RuntimeException("Tried to pop card from empty stack");
-		}
+        cardStack.add(card);
+    }
 
-		C card = cardStack.remove(cardStack.size() - 1);
+    private C popCard() {
+        if (cardStack.isEmpty()) {
+            throw new RuntimeException("Tried to pop card from empty stack");
+        }
 
-		canvas.getLayer().removeChild(card.getNode());
+        C card = cardStack.remove(cardStack.size() - 1);
 
-		return card;
-	}
+        canvas.getLayer().removeChild(card.getNode());
 
-	private void popCards(ActionEvent e) {
-		int i = cardStack.size() - 1;
+        return card;
+    }
 
-		while (i > 0) {
-			C cardOneDown = cardStack.get(i - 1);
+    private void popCards(ActionEvent e) {
+        int i = cardStack.size() - 1;
 
-			SubmenuKey<C> invokingCardKey = cardOneDown.getPressedSubmenuKey();
-			if (invokingCardKey == null) {
-				throw new RuntimeException("Failed to get "
-						+ "pressed submenu key in parent card");
-			}
-			Integer invokingKeyCode = cardOneDown.getKeyCodeForCardKey(invokingCardKey);
-			if (invokingKeyCode == null) {
-				throw new RuntimeException("Got pressed submenu"
-						+ " key in parent card, but could not get "
-						+ "its key code");
-			}
+        while (i > 0) {
+            C cardOneDown = cardStack.get(i - 1);
 
-			if (codesForHeldDownKeys.contains(invokingKeyCode)) {
-				break;
-			} else {
-				invokingCardKey.performPreDisplayPressActions(e);
-				popCard();
-				invokingCardKey.setReleased();
-				cardOneDown.setAllActive();
-			}
+            SubmenuKey<C> invokingCardKey = cardOneDown.getPressedSubmenuKey();
+            if (invokingCardKey == null) {
+                throw new RuntimeException("Failed to get "
+                        + "pressed submenu key in parent card");
+            }
+            Integer invokingKeyCode = cardOneDown.getKeyCodeForCardKey(invokingCardKey);
+            if (invokingKeyCode == null) {
+                throw new RuntimeException("Got pressed submenu"
+                        + " key in parent card, but could not get "
+                        + "its key code");
+            }
 
-			i--;
-		}
-	}
-	private Integer heldDownLeaf = null;
-	//the last item in the list (with the highest index) is the top of the stack
-	private final List<C> cardStack = new ArrayList<C>();
-	//the last item in the list (with the highest index) is the top of the stack
-	private final List<Integer> keyCodeStack = new ArrayList<Integer>();
+            if (codesForHeldDownKeys.contains(invokingKeyCode)) {
+                break;
+            } else {
+                invokingCardKey.performPreDisplayPressActions(e);
+                popCard();
+                invokingCardKey.setReleased();
+                cardOneDown.setAllActive();
+            }
+
+            i--;
+        }
+    }
+    private Integer heldDownLeaf = null;
+    //the last item in the list (with the highest index) is the top of the stack
+    private final List<C> cardStack = new ArrayList<C>();
+    //the last item in the list (with the highest index) is the top of the stack
+    private final List<Integer> keyCodeStack = new ArrayList<Integer>();
 	//keys held down does not necessarily contain the same set of keys as in
-	//the keyCodeStack, e.g. when F then J are held down but then F is released
-	private final Set<Integer> codesForHeldDownKeys = new HashSet<Integer>();
+    //the keyCodeStack, e.g. when F then J are held down but then F is released
+    private final Set<Integer> codesForHeldDownKeys = new HashSet<Integer>();
 
-	//returns popped C and keyCode Integer and Objects 0 and 1 respectively
-	private Object[] pop() {
-		if (cardStack.isEmpty()) {
-			throw new RuntimeException("Tried to pop card from empty stack");
-		}
+    //returns popped C and keyCode Integer and Objects 0 and 1 respectively
+    private Object[] pop() {
+        if (cardStack.isEmpty()) {
+            throw new RuntimeException("Tried to pop card from empty stack");
+        }
 
-		C card = cardStack.remove(cardStack.size() - 1);
+        C card = cardStack.remove(cardStack.size() - 1);
 
-		canvas.getLayer().removeChild(card.getNode());
+        canvas.getLayer().removeChild(card.getNode());
 
-		Integer keyCode = null;
+        Integer keyCode = null;
 
-		if (!keyCodeStack.isEmpty()) {
-			keyCode = keyCodeStack.remove(keyCodeStack.size() - 1);
-		}
+        if (!keyCodeStack.isEmpty()) {
+            keyCode = keyCodeStack.remove(keyCodeStack.size() - 1);
+        }
 
-		return new Object[]{card, keyCode};
-	}
+        return new Object[]{card, keyCode};
+    }
 
-	//use null for the keyCode of a root
-	private void push(C card, Integer keyCode) {
-		canvas.getLayer().addChild(card.getNode());
+    //use null for the keyCode of a root
+    private void push(C card, Integer keyCode) {
+        canvas.getLayer().addChild(card.getNode());
 
-		card.getNode().translate(cardStack.size() * CARD_STACK_X_OFFSET,
-				cardStack.size() * CARD_STACK_Y_OFFSET);
+        card.getNode().translate(cardStack.size() * CARD_STACK_X_OFFSET,
+                cardStack.size() * CARD_STACK_Y_OFFSET);
 
-		cardStack.add(card);
-		if (keyCode != null) {
-			keyCodeStack.add(keyCode);
-			codesForHeldDownKeys.add(keyCode);
-		}
-	}
+        cardStack.add(card);
+        if (keyCode != null) {
+            keyCodeStack.add(keyCode);
+            codesForHeldDownKeys.add(keyCode);
+        }
+    }
 
-	public void setCurrentRoot(C root) {
-		if (roots.contains(root)) {
-			this.currentRoot = root;
-			push(this.currentRoot, null);
-		} else {
-			throw new RuntimeException("Tried to set the current root to one that had not been added");
-		}
-	}
+    public void setCurrentRoot(C root) {
+        if (roots.contains(root)) {
+            this.currentRoot = root;
+            push(this.currentRoot, null);
+        } else {
+            throw new RuntimeException("Tried to set the current root to one that had not been added");
+        }
+    }
 
-	public KeyboardCard<C> getCurrentRoot() {
-		return currentRoot;
-	}
+    public KeyboardCard<C> getCurrentRoot() {
+        return currentRoot;
+    }
 
-	public List<C> getRoots() {
-		return roots;
-	}
+    public List<C> getRoots() {
+        return roots;
+    }
 
-	public void addRoot(C root) {
-		roots.add(root);
-	}
+    public void addRoot(C root) {
+        roots.add(root);
+    }
 
-	public void removeRoot(C root) {
-		roots.remove(root);
-	}
+    public void removeRoot(C root) {
+        roots.remove(root);
+    }
 }
