@@ -384,6 +384,8 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 
     public void setCurrentRoot(C root) {
         if (roots.contains(root)) {
+            while (!cardStack.isEmpty())
+                pop();
             this.currentRoot = root;
             push(this.currentRoot, null);
         } else {
