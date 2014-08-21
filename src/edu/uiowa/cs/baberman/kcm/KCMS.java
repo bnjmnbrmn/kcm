@@ -65,7 +65,7 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
         addRoot(rootCard);
         setCurrentRoot(rootCard);
 
-		//canvas.getLayer().addChild(rootCard.getNode());
+        //canvas.getLayer().addChild(rootCard.getNode());
         add(canvas, BorderLayout.CENTER);
 
         canvas.setPreferredSize(
@@ -80,7 +80,7 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
         if (System.getProperty("os.name").equals("Linux")) {
             new LinuxKeyRepeatAdjuster().addAutomaticKeyRepeatOnOff();
         }
-        
+
     }
 
     private class LinuxKeyRepeatAdjuster {
@@ -117,7 +117,7 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
                     turnOnKeyRepeat();
                 }
             });
-            
+
             KCMS.this.addHierarchyListener(new HierarchyListener() {
                 @Override
                 public void hierarchyChanged(HierarchyEvent e) {
@@ -203,28 +203,6 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
                         }
                     }
 
-//					if (heldDownLeaf == null) {
-//						if (cardKey instanceof SubmenuKey) {
-//							SubmenuKey<C> sk = (SubmenuKey<C>) cardKey;
-//							for (Action action : sk.getPreDisplayPressActions()) {
-//								action.actionPerformed(e);
-//							}
-//							push(sk.getSubmenu(), keyCode);
-//							for (Action action : sk.getPressActions()) {
-//								action.actionPerformed(e);
-//							}
-//						} else if (cardKey instanceof LeafKey) {
-//							heldDownLeaf = keyCode;
-//							LeafKey lk = (LeafKey) cardKey;
-//							for (Action action : lk.getPreDisplayPressActions()) {
-//								action.actionPerformed(e);
-//							}
-//							lk.getInnerSquare().setStroke(new BasicStroke(3.0f));
-//							for (Action action : lk.getPressActions()) {
-//								action.actionPerformed(e);
-//							}
-//						}
-//					}
                 }
             });
 
@@ -346,7 +324,7 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
     private final List<C> cardStack = new ArrayList<C>();
     //the last item in the list (with the highest index) is the top of the stack
     private final List<Integer> keyCodeStack = new ArrayList<Integer>();
-	//keys held down does not necessarily contain the same set of keys as in
+    //keys held down does not necessarily contain the same set of keys as in
     //the keyCodeStack, e.g. when F then J are held down but then F is released
     private final Set<Integer> codesForHeldDownKeys = new HashSet<Integer>();
 
@@ -385,8 +363,9 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
 
     public void setCurrentRoot(C root) {
         if (roots.contains(root)) {
-            while (!cardStack.isEmpty())
+            while (!cardStack.isEmpty()) {
                 pop();
+            }
             this.currentRoot = root;
             push(this.currentRoot, null);
         } else {
