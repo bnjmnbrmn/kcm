@@ -231,38 +231,6 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
                             popCards(e);
                         }
                     }
-//
-//					if (cardKey instanceof HoleKey) {
-//
-//						int i = cardStack.size() - 1;
-//						while (cardStack.get(i).getCardKeyForKeyCode(keyCode) instanceof HoleKey) {
-//							i--;
-//						}
-//
-//						SubmenuKey<C> sk = (SubmenuKey<C>) cardStack
-//								.get(i).getCardKeyForKeyCode(keyCode);
-//
-//						for (Action action : sk.getPreDisplayReleaseActions()) {
-//							action.actionPerformed(e);
-//						}
-//
-////						while (!keyCodeStack.isSubsetOf(keysHeldDown))
-//						
-//						if (i == cardStack.size() - 2) {
-//							pop();
-//						}
-//
-//					} else if (keyCode == heldDownLeaf) {
-//						heldDownLeaf = null;
-//						LeafKey lk = (LeafKey) cardKey;
-//						for (Action action : lk.getPreDisplayReleaseActions()) {
-//							action.actionPerformed(e);
-//						}
-//						lk.getInnerSquare().setStroke(new BasicStroke(1.0f));
-//						for (Action action : lk.getReleaseActions()) {
-//							action.actionPerformed(e);
-//						}
-//					}
                 }
             });
         }
@@ -328,14 +296,14 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
     //the keyCodeStack, e.g. when F then J are held down but then F is released
     private final Set<Integer> codesForHeldDownKeys = new HashSet<Integer>();
 
-    //returns popped C and keyCode Integer and Objects 0 and 1 respectively
+    //returns popped C and keyCode Integer as Objects 0 and 1 respectively
     private Object[] pop() {
         if (cardStack.isEmpty()) {
             throw new RuntimeException("Tried to pop card from empty stack");
         }
 
         C card = cardStack.remove(cardStack.size() - 1);
-
+        card.setAllKeysReleased();  
         canvas.getLayer().removeChild(card.getNode());
 
         Integer keyCode = null;
