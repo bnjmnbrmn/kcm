@@ -14,6 +14,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -78,7 +80,7 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
         if (System.getProperty("os.name").equals("Linux")) {
             new LinuxKeyRepeatAdjuster().addAutomaticKeyRepeatOnOff();
         }
-
+        
     }
 
     private class LinuxKeyRepeatAdjuster {
@@ -103,7 +105,7 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
         };
 
         public void addAutomaticKeyRepeatOnOff() {
-            KCMS.this.addFocusListener(new FocusListener() {
+            KCMS.this.canvas.addFocusListener(new FocusListener() {
 
                 @Override
                 public void focusGained(FocusEvent e) {
@@ -115,8 +117,7 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
                     turnOnKeyRepeat();
                 }
             });
-
-
+            
             KCMS.this.addHierarchyListener(new HierarchyListener() {
                 @Override
                 public void hierarchyChanged(HierarchyEvent e) {
