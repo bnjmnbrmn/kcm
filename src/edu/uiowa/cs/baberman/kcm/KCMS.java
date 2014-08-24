@@ -303,7 +303,8 @@ public class KCMS<C extends KeyboardCard<C>> extends JPanel {
         }
 
         C card = cardStack.remove(cardStack.size() - 1);
-        card.setAllKeysReleased();  
+        card.setAllKeysReleased(); 
+        card.setAllActive();
         canvas.getLayer().removeChild(card.getNode());
 
         Integer keyCode = null;
